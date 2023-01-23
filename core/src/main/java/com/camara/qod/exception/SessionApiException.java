@@ -26,7 +26,6 @@ package com.camara.qod.exception;
 
 import lombok.Generated;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.springframework.http.HttpStatus;
 

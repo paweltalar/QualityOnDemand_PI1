@@ -25,8 +25,8 @@
 package com.camara.qod.feign;
 
 import com.camara.qod.model.AvailabilityRequest;
+import jakarta.validation.Valid;
 import java.util.UUID;
-import javax.validation.Valid;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

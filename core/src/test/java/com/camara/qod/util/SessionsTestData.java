@@ -27,12 +27,13 @@ package com.camara.qod.util;
 import com.camara.qod.api.model.AsId;
 import com.camara.qod.api.model.CreateSession;
 import com.camara.qod.api.model.PortsSpec;
-import com.camara.qod.api.model.PortsSpecRanges;
+import com.camara.qod.api.model.PortsSpecRangesInner;
 import com.camara.qod.api.model.QosProfile;
 import com.camara.qod.api.model.SessionInfo;
 import com.camara.qod.api.model.UeId;
 import com.camara.qod.entity.H2QosSession;
 import com.camara.qod.entity.RedisQosSession;
+import com.camara.scef.api.model.AsSessionWithQoSSubscription;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collections;
@@ -45,10 +46,8 @@ import java.util.UUID;
 public class SessionsTestData extends TestData {
 
   public static final String SESSION_URI = "/qod/v0/sessions";
-  public static final String NOTIFICATION_URI = "/3gpp-as-session-with-qos/v1/notifications";
   public static final int DURATION_DEFAULT = 2;
   public static final String SESSION_UUID = "000ab9f5-26e8-48b9-a56e-52ecdeaa9172";
-  public static final String AVAILABILITY_SERVICE_URI = "/api/v1/sessions";
 
   public static CreateSession createTestSession(QosProfile qosProfile) {
     return createTestSession(qosProfile, new AsId().ipv4addr("200.24.24.2"));
@@ -177,8 +176,8 @@ public class SessionsTestData extends TestData {
     info.setDuration(60);
     info.ueId(new UeId().ipv4addr("198.51.100.1"));
     info.asId(new AsId().ipv4addr("198.51.100.1"));
-    info.uePorts(new PortsSpec().ports(List.of(5021, 5022)).ranges(List.of(new PortsSpecRanges().from(5010).to(5020))));
-    info.asPorts(new PortsSpec().ports(List.of(5021, 5022)).ranges(List.of(new PortsSpecRanges().from(5010).to(5020))));
+    info.uePorts(new PortsSpec().ports(List.of(5021, 5022)).ranges(List.of(new PortsSpecRangesInner().from(5010).to(5020))));
+    info.asPorts(new PortsSpec().ports(List.of(5021, 5022)).ranges(List.of(new PortsSpecRangesInner().from(5010).to(5020))));
     info.setQos(QosProfile.E);
     info.setNotificationUri(new URI("http://application-server.com/notifications"));
     info.setNotificationAuthToken("c8974e592c2fa383d4a3960714");
@@ -201,8 +200,8 @@ public class SessionsTestData extends TestData {
         .duration(DURATION_DEFAULT)
         .ueId(new UeId().ipv4addr("198.51.100.1"))
         .asId(new AsId().ipv4addr("198.51.100.1"))
-        .uePorts(new PortsSpec().ports(List.of(5021, 5022)).ranges(List.of(new PortsSpecRanges().from(5010).to(5020))))
-        .asPorts(new PortsSpec().ports(List.of(5021, 5022)).ranges(List.of(new PortsSpecRanges().from(5010).to(5020))))
+        .uePorts(new PortsSpec().ports(List.of(5021, 5022)).ranges(List.of(new PortsSpecRangesInner().from(5010).to(5020))))
+        .asPorts(new PortsSpec().ports(List.of(5021, 5022)).ranges(List.of(new PortsSpecRangesInner().from(5010).to(5020))))
         .qos(QosProfile.L)
         .subscriptionId("subscrId123")
         .notificationUri(new URI("http://application-server.com/notifications"))
@@ -226,8 +225,8 @@ public class SessionsTestData extends TestData {
         .duration(DURATION_DEFAULT)
         .ueId(new UeId().ipv4addr("198.51.100.1"))
         .asId(new AsId().ipv4addr("198.51.100.1"))
-        .uePorts(new PortsSpec().ports(List.of(5021, 5022)).ranges(List.of(new PortsSpecRanges().from(5010).to(5020))))
-        .asPorts(new PortsSpec().ports(List.of(5021, 5022)).ranges(List.of(new PortsSpecRanges().from(5010).to(5020))))
+        .uePorts(new PortsSpec().ports(List.of(5021, 5022)).ranges(List.of(new PortsSpecRangesInner().from(5010).to(5020))))
+        .asPorts(new PortsSpec().ports(List.of(5021, 5022)).ranges(List.of(new PortsSpecRangesInner().from(5010).to(5020))))
         .qos(QosProfile.L)
         .subscriptionId("subscrId123")
         .notificationUri(new URI("http://application-server.com/notifications"))
@@ -235,6 +234,25 @@ public class SessionsTestData extends TestData {
         .expirationLockUntil(0)
         .bookkeeperId(null)
         .build();
+  }
+
+  /**
+   * Create a sample response from NEF including the subscription-Id.
+   *
+   * @return {@link AsSessionWithQoSSubscription}
+   */
+  public static AsSessionWithQoSSubscription createNefSubscriptionResponse() {
+    return new AsSessionWithQoSSubscription().self(
+        "https://foo.com/subscriptions/" + UUID.randomUUID());
+  }
+
+  /**
+   * Create a sample response from NEF without the subscription-Id.
+   *
+   * @return {@link AsSessionWithQoSSubscription}
+   */
+  public static AsSessionWithQoSSubscription createNefSubscriptionResponseWithoutSubscriptionId() {
+    return new AsSessionWithQoSSubscription().self(null);
   }
 
 }

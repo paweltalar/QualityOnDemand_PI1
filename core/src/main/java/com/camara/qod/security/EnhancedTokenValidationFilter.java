@@ -29,6 +29,10 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -36,10 +40,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -57,6 +57,9 @@ public class EnhancedTokenValidationFilter extends OncePerRequestFilter {
   @Value("${enhanced-token-validation.enabled}")
   private Boolean isEnhancedTokenValidationEnabled;
 
+  private static String getEndpointName(String servletPath) {
+    return servletPath.substring(servletPath.lastIndexOf('/'));
+  }
 
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -97,10 +100,6 @@ public class EnhancedTokenValidationFilter extends OncePerRequestFilter {
       throw new TokenProcessingException(
           String.format("operation claim (%s) is not equal actual request method from request (%s)", operationClaim, request.getMethod()));
     }
-  }
-
-  private static String getEndpointName(String servletPath) {
-    return servletPath.substring(servletPath.lastIndexOf('/'));
   }
 
   private Map<String, Claim> extractClaimsFromToken(String authorizationHeader) {

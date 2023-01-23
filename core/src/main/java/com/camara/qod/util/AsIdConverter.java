@@ -28,8 +28,8 @@ import com.camara.qod.api.model.AsId;
 import com.camara.qod.exception.SessionApiException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import javax.persistence.AttributeConverter;
-import javax.persistence.Converter;
+import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 

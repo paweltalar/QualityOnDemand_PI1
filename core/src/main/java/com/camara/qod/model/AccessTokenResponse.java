@@ -35,6 +35,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AccessTokenResponse {
+
   @JsonProperty("access_token")
   private String accessToken;
 }

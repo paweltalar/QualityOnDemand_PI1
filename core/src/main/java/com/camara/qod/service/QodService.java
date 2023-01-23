@@ -28,10 +28,10 @@ import com.camara.qod.api.model.CreateSession;
 import com.camara.qod.api.model.SessionEvent;
 import com.camara.qod.api.model.SessionInfo;
 import com.camara.scef.api.model.UserPlaneEvent;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import org.springframework.scheduling.annotation.Async;
 
 /**

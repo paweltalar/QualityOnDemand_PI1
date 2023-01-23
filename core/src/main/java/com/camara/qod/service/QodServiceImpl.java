@@ -28,7 +28,7 @@ import com.camara.qod.api.model.CreateSession;
 import com.camara.qod.api.model.Message;
 import com.camara.qod.api.model.Notification;
 import com.camara.qod.api.model.PortsSpec;
-import com.camara.qod.api.model.PortsSpecRanges;
+import com.camara.qod.api.model.PortsSpecRangesInner;
 import com.camara.qod.api.model.QosProfile;
 import com.camara.qod.api.model.SessionEvent;
 import com.camara.qod.api.model.SessionInfo;
@@ -50,6 +50,9 @@ import com.camara.scef.api.model.FlowInfo;
 import com.camara.scef.api.model.UserPlaneEvent;
 import feign.FeignException;
 import inet.ipaddr.IPAddressString;
+import jakarta.annotation.PostConstruct;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -58,9 +61,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import javax.annotation.PostConstruct;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -171,7 +171,7 @@ public class QodServiceImpl implements QodService {
   /**
    * Checks if ports range is ordered from lower to higher & are in 0-65535.
    *
-   * @param ports {@link PortsSpecRanges}
+   * @param ports {@link PortsSpecRangesInner}
    */
   private static void checkPortRange(PortsSpec ports) {
     if (ports == null) {
@@ -322,8 +322,7 @@ public class QodServiceImpl implements QodService {
     long expiresAt = now + duration;
 
     // check if requested booking is available and book it
-    UUID bookkeeperId = qodConfig.getQosAvailabilityEnabled() ? createBooking(uuid, now, expiresAt, session) : null;
-
+    final UUID bookkeeperId = qodConfig.getQosAvailabilityEnabled() ? createBooking(uuid, now, expiresAt, session) : null;
     FlowInfo flowInfo = createFlowInfo(ueAddr, asAddr, flowId);
     AsSessionWithQoSSubscription qosSubscription = createQosSubscription(session.getUeId().getIpv4addr(), flowInfo, qosReference,
         scefConfig.getSupportedFeatures());
@@ -335,9 +334,7 @@ public class QodServiceImpl implements QodService {
     if (subscriptionId == null) {
       throw new SessionApiException(HttpStatus.INTERNAL_SERVER_ERROR, "No valid subscription ID was provided in NEF/SCEF response");
     }
-
     log.info("Save QoS session {}", session);
-
     QosSession qosSession = storage.saveSession(now, expiresAt, uuid, session, subscriptionId, bookkeeperId);
 
     SessionInfo ret = sessionModelMapper.map(qosSession);
@@ -494,14 +491,14 @@ public class QodServiceImpl implements QodService {
         .filter(qosSession -> checkNetworkIntersection(asAddr, qosSession.getAsId().getIpv4addr()))
         .filter(qosSession -> checkPortIntersection(
             isPortsSpecNotDefined(uePorts)
-                ? new PortsSpec().ranges(Collections.singletonList(new PortsSpecRanges().from(0).to(65535)))
+                ? new PortsSpec().ranges(Collections.singletonList(new PortsSpecRangesInner().from(0).to(65535)))
                 : uePorts, (isPortsSpecNotDefined(qosSession.getUePorts())) ? new PortsSpec().ranges(
-                Collections.singletonList(new PortsSpecRanges().from(0).to(65535))) : qosSession.getUePorts()))
+                Collections.singletonList(new PortsSpecRangesInner().from(0).to(65535))) : qosSession.getUePorts()))
         .filter(qosSession -> checkPortIntersection(
             isPortsSpecNotDefined(asPorts)
-                ? new PortsSpec().ranges(Collections.singletonList(new PortsSpecRanges().from(0).to(65535)))
+                ? new PortsSpec().ranges(Collections.singletonList(new PortsSpecRangesInner().from(0).to(65535)))
                 : asPorts, (isPortsSpecNotDefined(qosSession.getAsPorts())) ? new PortsSpec().ranges(
-                Collections.singletonList(new PortsSpecRanges().from(0).to(65535))) : qosSession.getAsPorts())).findFirst();
+                Collections.singletonList(new PortsSpecRangesInner().from(0).to(65535))) : qosSession.getAsPorts())).findFirst();
   }
 
   /**

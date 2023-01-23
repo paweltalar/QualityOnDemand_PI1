@@ -44,6 +44,12 @@ public class ScefAccessTokenExchanger {
   private final RestTemplate restTemplate;
   private final ScefConfig scefConfig;
 
+  private static MultiValueMap<String, String> createForm() {
+    MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
+    params.add("grant_type", "client_credentials");
+    return params;
+  }
+
   /**
    * Gets access token using oauth2 client credentials flow.
    */
@@ -62,11 +68,5 @@ public class ScefAccessTokenExchanger {
     headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
     headers.setBasicAuth(scefConfig.getClientId(), scefConfig.getClientSecret());
     return headers;
-  }
-
-  private static MultiValueMap<String, String> createForm() {
-    MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
-    params.add("grant_type", "client_credentials");
-    return params;
   }
 }

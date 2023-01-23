@@ -24,7 +24,6 @@
 
 package com.camara.qod.security;
 
-
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,10 +39,13 @@ public class SecurityConfig {
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http.authorizeHttpRequests(authorizeRequest -> {
-      authorizeRequest.antMatchers("/swagger-ui/**").permitAll();
-      authorizeRequest.antMatchers("/v3/api-docs/**").permitAll();
-      authorizeRequest.antMatchers("/actuator/**").permitAll();
+      authorizeRequest.requestMatchers("/swagger-ui/**").permitAll();
+      authorizeRequest.requestMatchers("/v3/api-docs/**").permitAll();
+      authorizeRequest.requestMatchers("/actuator/**").permitAll();
+      authorizeRequest.requestMatchers("/qod-api.yaml").permitAll();
+      authorizeRequest.anyRequest().authenticated();
     }).csrf().disable();
     return http.build();
   }
 }
+

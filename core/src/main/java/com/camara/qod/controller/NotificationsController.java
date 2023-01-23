@@ -31,8 +31,7 @@ import com.camara.scef.api.model.UserPlaneNotificationData;
 import com.camara.scef.api.notifications.NotificationsApi;
 import com.camara.scef.api.notifications.NotificationsApiDelegate;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
@@ -41,9 +40,8 @@ import org.springframework.stereotype.Controller;
  */
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 public class NotificationsController implements NotificationsApiDelegate {
-
-  private static final Logger log = LoggerFactory.getLogger(NotificationsController.class);
 
   private final QodService qodService;
 
