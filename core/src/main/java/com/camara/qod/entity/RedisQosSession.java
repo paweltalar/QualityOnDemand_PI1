@@ -28,8 +28,11 @@ import com.camara.qod.api.model.AsId;
 import com.camara.qod.api.model.PortsSpec;
 import com.camara.qod.api.model.UeId;
 import com.camara.qod.model.QosSession;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.index.Indexed;
@@ -37,7 +40,10 @@ import org.springframework.data.redis.core.index.Indexed;
 /**
  * This is the QoS Session subscription resource.
  */
-@Data
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode(callSuper = true)
 @SuperBuilder
 @RedisHash("QoSSession")
 @NoArgsConstructor

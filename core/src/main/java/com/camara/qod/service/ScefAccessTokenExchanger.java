@@ -28,6 +28,7 @@ import com.camara.qod.config.ScefConfig;
 import com.camara.qod.model.AccessTokenResponse;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -39,13 +40,14 @@ import org.springframework.web.client.RestTemplate;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class ScefAccessTokenExchanger {
 
   private final RestTemplate restTemplate;
   private final ScefConfig scefConfig;
 
   private static MultiValueMap<String, String> createForm() {
-    MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
+    MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
     params.add("grant_type", "client_credentials");
     return params;
   }
@@ -56,10 +58,16 @@ public class ScefAccessTokenExchanger {
   public String exchange() {
     HttpHeaders headers = createHeaders();
     MultiValueMap<String, String> params = createForm();
-    HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(params, headers);
+    HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
     ResponseEntity<AccessTokenResponse> response = restTemplate.postForEntity(scefConfig.getTokenEndpoint(), request,
         AccessTokenResponse.class);
-    return response.getBody().getAccessToken();
+    AccessTokenResponse accessTokenResponse = response.getBody();
+    if (accessTokenResponse != null) {
+      return accessTokenResponse.getAccessToken();
+    } else {
+      log.warn("No access-token provided from the token-provider.");
+      return "";
+    }
   }
 
   private HttpHeaders createHeaders() {

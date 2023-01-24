@@ -34,7 +34,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -46,7 +45,7 @@ import org.springframework.stereotype.Service;
 @Profile("!local")
 public class RedisStorageService implements StorageService {
 
-  private static final String qosSessionExpirationListName = "QoSSessionExpirationList";
+  private static final String QOS_SESSION_EXPIRATION_LIST_NAME = "QoSSessionExpirationList";
 
   private final RedisTemplate<String, String> redisTemplate;
   private final StorageModelMapper storageModelMapper;
@@ -102,17 +101,17 @@ public class RedisStorageService implements StorageService {
   }
 
   private void addExpiration(UUID id, long expiresAt) {
-    redisTemplate.opsForZSet().add(qosSessionExpirationListName, id.toString(), expiresAt);
+    redisTemplate.opsForZSet().add(QOS_SESSION_EXPIRATION_LIST_NAME, id.toString(), expiresAt);
   }
 
   private void removeExpiration(UUID id) {
-    redisTemplate.opsForZSet().remove(qosSessionExpirationListName, id.toString());
+    redisTemplate.opsForZSet().remove(QOS_SESSION_EXPIRATION_LIST_NAME, id.toString());
   }
 
   @Override
   public List<QosSessionIdWithExpiration> getSessionsThatExpireUntil(Long expirationTime) {
     Set<ZSetOperations.TypedTuple<String>> qosSessionExpirationList = redisTemplate.opsForZSet()
-        .rangeByScoreWithScores(qosSessionExpirationListName, 0, expirationTime);
+        .rangeByScoreWithScores(QOS_SESSION_EXPIRATION_LIST_NAME, 0, expirationTime);
     return qosSessionExpirationList != null ? qosSessionExpirationList.stream().map(storageModelMapper::mapToList)
         .toList() : null;
   }
@@ -123,7 +122,7 @@ public class RedisStorageService implements StorageService {
         .findByUeIpv4addr(ipAddr)
         .stream()
         .map(storageModelMapper::mapToLibraryQosSession)
-        .collect(Collectors.toList());
+        .toList();
   }
 
   @Override

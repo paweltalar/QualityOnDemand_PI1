@@ -49,7 +49,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RequiredArgsConstructor
 public class SessionsController implements SessionsApiDelegate {
 
-  private static final int maxSessionDuration = 86400; // 24 hours
+  private static final int MAX_SESSION_DURATION = 86400; // 24 hours
   private final QodService qodService;
 
   /**
@@ -62,7 +62,7 @@ public class SessionsController implements SessionsApiDelegate {
   @Override
   public ResponseEntity<SessionInfo> createSession(CreateSession createSession) {
     createSession.setDuration(
-        Optional.ofNullable(createSession.getDuration()).orElse(maxSessionDuration));
+        Optional.ofNullable(createSession.getDuration()).orElse(MAX_SESSION_DURATION));
     validateNetwork(createSession.getAsId().getIpv4addr());
     validateNetwork(createSession.getUeId().getIpv4addr());
 

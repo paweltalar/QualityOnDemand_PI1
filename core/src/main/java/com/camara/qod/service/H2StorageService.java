@@ -33,7 +33,6 @@ import com.camara.qod.repository.QodSessionH2Repository;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -103,7 +102,7 @@ public class H2StorageService implements StorageService {
         .findByUeIpv4addr(ipAddr)
         .stream()
         .map(storageModelMapper::mapToLibraryQosSession)
-        .collect(Collectors.toList());
+        .toList();
   }
 
   @Override
