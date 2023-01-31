@@ -33,6 +33,8 @@
     <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
     <shedlock-spring.version>4.42.0</shedlock-spring.version>
     <springdoc.version>2.0.2</springdoc.version>
+    <spring-boot.version>3.0.2</spring-boot.version>
+    <spring-cloud.version>2022.0.1</spring-cloud.version>
   </properties>
 
   <modules>

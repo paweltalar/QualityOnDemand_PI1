@@ -19,7 +19,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-dependencies</artifactId>
         <type>pom</type>
-        <version>3.0.2</version>
+        <version>${spring-boot.version}</version>
         <scope>import</scope>
       </dependency>
     </dependencies>
@@ -31,7 +31,6 @@
     <springfox-version>3.0.0</springfox-version>
     <threetenbp-version>1.6.1</threetenbp-version>
     <datatype-threetenbp-version>2.9.10</datatype-threetenbp-version>
-    <spring-boot-starter-web-version>3.0.2</spring-boot-starter-web-version>
     <javax-validation-api-version>2.0.1.Final</javax-validation-api-version>
     <migbase64-version>2.2</migbase64-version>
     <jackson-databind-nullable>0.2.3</jackson-databind-nullable>
@@ -82,7 +81,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
-      <version>${spring-boot-starter-web-version}</version>
+      <version>${spring-boot.version}</version>
     </dependency>
     <dependency>
       <groupId>javax.validation</groupId>
