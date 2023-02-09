@@ -44,6 +44,8 @@ qod:
   availability:
     enabled: true
     url: http://localhost:8091
+  duration:
+    default: 600
 # Logging
 logging:
   file:

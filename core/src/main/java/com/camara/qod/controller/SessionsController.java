@@ -36,6 +36,7 @@ import java.net.URI;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -49,7 +50,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RequiredArgsConstructor
 public class SessionsController implements SessionsApiDelegate {
 
-  private static final int MAX_SESSION_DURATION = 86400; // 24 hours
+  @Value("${qod.duration.default:600}")
+  private int defaultDuration;
   private final QodService qodService;
 
   /**
@@ -62,7 +64,7 @@ public class SessionsController implements SessionsApiDelegate {
   @Override
   public ResponseEntity<SessionInfo> createSession(CreateSession createSession) {
     createSession.setDuration(
-        Optional.ofNullable(createSession.getDuration()).orElse(MAX_SESSION_DURATION));
+        Optional.ofNullable(createSession.getDuration()).orElse(defaultDuration));
     validateNetwork(createSession.getAsId().getIpv4addr());
     validateNetwork(createSession.getUeId().getIpv4addr());
 
