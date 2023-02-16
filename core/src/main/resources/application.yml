@@ -42,7 +42,7 @@ qod:
   mask-sensible-data: true # if set to true, sensible data is masked in response body
   allow-multiple-ueaddr: true # if set to true, network segments are allowed for ueAddr
   availability:
-    enabled: true
+    enabled: false
     url: http://localhost:8091
   duration:
     default: 600
