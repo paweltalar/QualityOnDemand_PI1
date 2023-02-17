@@ -31,6 +31,7 @@ import static com.camara.qod.util.SessionsTestData.getTestSessionAddrInvalid;
 import static com.camara.qod.util.SessionsTestData.getTestSessionNetworkInvalid;
 import static com.camara.qod.util.SessionsTestData.getTestSessionRequest;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -39,6 +40,7 @@ import com.camara.qod.api.SessionsApiController;
 import com.camara.qod.exception.ExceptionHandlerAdvice;
 import com.camara.qod.exception.SessionApiException;
 import com.camara.qod.service.QodService;
+import com.camara.qod.service.ValidationService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
@@ -65,6 +67,9 @@ class SessionsControllerTest {
 
   @Autowired
   private MockMvc mockMvc;
+
+  @MockBean
+  ValidationService validationService;
 
   @Test
   void createSession_ok() throws Exception {
@@ -143,6 +148,7 @@ class SessionsControllerTest {
 
   @Test
   void createSession_BadRequest_NetworkValid() throws Exception {
+    doCallRealMethod().when(validationService).validate(any());
     mockMvc.perform(MockMvcRequestBuilders
             .post(SESSION_URI)
             .accept(MediaType.APPLICATION_JSON_VALUE)

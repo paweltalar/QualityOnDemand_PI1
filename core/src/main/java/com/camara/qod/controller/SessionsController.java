@@ -27,11 +27,8 @@ package com.camara.qod.controller;
 import com.camara.qod.api.SessionsApiDelegate;
 import com.camara.qod.api.model.CreateSession;
 import com.camara.qod.api.model.SessionInfo;
-import com.camara.qod.exception.ErrorCode;
-import com.camara.qod.exception.SessionApiException;
 import com.camara.qod.service.QodService;
-import inet.ipaddr.IPAddress;
-import inet.ipaddr.IPAddressString;
+import com.camara.qod.service.ValidationService;
 import java.net.URI;
 import java.util.Optional;
 import java.util.UUID;
@@ -54,6 +51,8 @@ public class SessionsController implements SessionsApiDelegate {
   private int defaultDuration;
   private final QodService qodService;
 
+  private final ValidationService validationService;
+
   /**
    * POST /sessions : Creates a new QoS session on demand.
    *
@@ -65,9 +64,7 @@ public class SessionsController implements SessionsApiDelegate {
   public ResponseEntity<SessionInfo> createSession(CreateSession createSession) {
     createSession.setDuration(
         Optional.ofNullable(createSession.getDuration()).orElse(defaultDuration));
-    validateNetwork(createSession.getAsId().getIpv4addr());
-    validateNetwork(createSession.getUeId().getIpv4addr());
-
+    validationService.validate(createSession);
     SessionInfo sessionInfo = qodService.createSession(createSession);
 
     URI location = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -101,18 +98,5 @@ public class SessionsController implements SessionsApiDelegate {
   public ResponseEntity<Void> deleteSession(UUID sessionId) {
     qodService.deleteSession(sessionId);
     return ResponseEntity.noContent().build();
-  }
-
-  /**
-   * Checks if network is defined with the start address, e.g. 200.24.24.0/24 and not 200.24.24.2/24.
-   */
-  private void validateNetwork(String network) {
-    IPAddress current = new IPAddressString(network).getAddress();
-    IPAddress rewritten = current.toPrefixBlock();
-    if (current != rewritten) {
-      throw new SessionApiException(
-          HttpStatus.BAD_REQUEST, "Network specification not valid " + network,
-          ErrorCode.VALIDATION_FAILED);
-    }
   }
 }
