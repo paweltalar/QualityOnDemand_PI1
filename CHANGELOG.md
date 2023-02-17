@@ -1,18 +1,20 @@
 # ChangeLog QoD-API
 
-## Next Release x.x.x (IN PROGRESS, NOT RELEASED SO FAR)
+## Release 0.8.0-dtag.1 (17.02.2023)
+### Added <br><br>
+### Changed
+#### /sessions
+    - ueAddr (ipv4) changed to ueId (ipv4, ipv6, msisdn, externalid)
+    - asAddr (ipv4) changed to asId (ipv4, ipv6)
+    - PortsSpec is a structred object now, not a plain string
+    - Protocol (in & out) removed
+    - QoS profiles renamed
+    - Basepath changed
 
-### Features
+### Removed
+    - /check-qos-availability endpoint
 
-##### /sessions
-
-    - Parameters protocolIn and protocolOut are optional, default value is ANY
-    - When creating new session the response can have an array of messages which contain information / warnings
-    - Change duration of an existing qod session
-
-### Bugfixes
-    
-    - session validation for protocol overlap
+### Bugfixes <br><br>
 
 ## Release 0.1.0 (25.07.2022)
 
@@ -22,7 +24,7 @@ This is the initial, non-productive release for the Camara project.
 
 - 3GPP TS 29.122 V17
 
-### Features
+### Added
 
 ##### /sessions
 
